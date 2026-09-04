@@ -50,7 +50,7 @@ const Portfolio = () => {
     <div style={styles.container}>
       {/* Navigation */}
       <nav style={styles.navbar}>
-        <div style={styles.brand}>ML.ENGINEER</div>
+        <div style={styles.brand}>Hany Ehab</div>
         <div style={styles.navLinks}>
           <a href="#about" style={styles.navLink}>About</a>
           <a href="#projects" style={styles.navLink}>Projects</a>
