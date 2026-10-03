@@ -414,15 +414,26 @@ function Projects() {
 }
 
 const EMAIL = "hanyelashry323@gmail.com";
+const WEB3FORMS_KEY = "e97f660e-1614-45fa-b6a4-0cf00eb8e59d"; // public Web3Forms access key (safe to expose; it only delivers to your inbox)
 
 function Contact() {
   const [f, setF] = useState({ n: "", e: "", m: "" });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState("idle"); // idle | sending | ok | err
   const set = (k) => (ev) => setF({ ...f, [k]: ev.target.value });
-  const submit = (ev) => {
+  const submit = async (ev) => {
     ev.preventDefault();
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent("Portfolio inquiry from " + f.n)}&body=${encodeURIComponent(f.m + "\n\n" + f.n + " (" + f.e + ")")}`;
-    setSent(true);
+    if (ev.target.botcheck && ev.target.botcheck.checked) return; // honeypot: bots tick it, humans never see it
+    setStatus("sending");
+    try {
+      const r = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: "Portfolio inquiry from " + f.n, from_name: f.n, name: f.n, email: f.e, message: f.m }),
+      });
+      const j = await r.json();
+      if (!r.ok || !j.success) throw new Error("send failed");
+      setF({ n: "", e: "", m: "" }); setStatus("ok");
+    } catch (err) { setStatus("err"); }
   };
   const ch = [["EMAIL", EMAIL, "mailto:" + EMAIL], ["GITHUB", "github.com/hany73-max", "https://github.com/hany73-max"], ["LINKEDIN", "linkedin.com/in/hany-34ry", "https://www.linkedin.com/in/hany-34ry/"], ["LOCATION", "Tanta, Egypt · UTC+3", null]];
   const fld = "fld w-full bg-black/30 border border-white/15 px-3 py-2 text-white mono text-[1.000rem]";
@@ -452,8 +463,10 @@ function Contact() {
             </div>
             <div className="mt-4 flex-1 flex flex-col"><label htmlFor="m" className={lab}>MESSAGE</label><textarea id="m" required rows="4" value={f.m} onChange={set("m")} className={fld + " resize-none flex-1"} /></div>
             <div className="mt-5 flex items-center gap-4 flex-wrap">
-              <button type="submit" className="btn">Transmit →</button>
-              {sent && <span className="mono text-xs tc" role="status">MAIL APP OPENED // SEND IT FROM THERE</span>}
+              <input type="checkbox" name="botcheck" tabIndex="-1" autoComplete="off" style={{ display: "none" }} />
+              <button type="submit" className="btn" disabled={status === "sending"} style={status === "sending" ? { opacity: .6, cursor: "wait" } : undefined}>{status === "sending" ? "Transmitting…" : "Transmit →"}</button>
+              {status === "ok" && <span className="mono text-xs tc" role="status">TRANSMISSION RECEIVED // I WILL REPLY SOON</span>}
+              {status === "err" && <span className="mono text-xs" style={{ color: "var(--m)" }} role="alert">TRANSMISSION FAILED // EMAIL ME DIRECTLY: {EMAIL}</span>}
             </div>
           </form>
         </div>
