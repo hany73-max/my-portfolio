@@ -255,7 +255,7 @@ function Hero({ desktop }) {
 }
 
 function About({ desktop }) {
-  const specs = [["ROLE", "Machine Learning Engineer"], ["STACK", "Python · PyTorch · React · Three.js"], ["BASE", "Tanta, Egypt"], ["UPTIME", "Models shipped to production"]];
+  const specs = [["ROLE", "Machine Learning Engineer"], ["STACK", "Python · PyTorch · Scikitlearn · SQL · Spacy"], ["BASE", "Tanta, Egypt"], ["UPTIME", "End to end model production"]];
   return (
     <section id="about" className="relative min-h-screen flex items-center overflow-hidden">
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-20">
@@ -358,20 +358,25 @@ function Credentials() {
   );
 }
 
-const Spark = ({ d }) => {
-  const p = d.map((v, i) => `${i * (200 / (d.length - 1))},${40 - v * 36}`).join(" ");
+// Decorative spike graph. All cards share one timeline, so bursts line up chronologically.
+const Activity = ({ d }) => {
+  const n = d.length;
+  const pts = d.map((v, i) => (i * 200 / (n - 1)) + "," + (40 - v * 36)).join(" ");
   return (
-    <svg viewBox="0 0 200 44" className="w-full h-11" preserveAspectRatio="none" aria-hidden>
-      <polyline points={`0,44 ${p} 200,44`} fill="rgba(85,160,126,.14)" stroke="none" />
-      <polyline points={p} fill="none" stroke="#55A07E" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-    </svg>
+    <div aria-hidden>
+      <svg viewBox="0 0 200 44" className="w-full h-14" preserveAspectRatio="none">
+        <polyline points={"0,44 " + pts + " 200,44"} fill="rgba(85,160,126,.14)" stroke="none" />
+        <polyline points={pts} fill="none" stroke="#55A07E" strokeWidth="1.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <div className="mt-1 flex justify-between mono text-[0.769rem] tracking-widest tc"><span>// BUILD TIMELINE</span><span>NOW →</span></div>
+    </div>
   );
 };
 
 const PROJECTS = [
-  { t: "Kessler-Shield", st: "LIVE", d: "Predicts high-risk satellite collision events from real orbital telemetry, resolving a severe class imbalance with precision-recall-tuned thresholding.", ml: "CLASS IMBALANCE RESOLVED", mv: "1:1300", s: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], link: "https://kessler-shield-akmjrrdw9dsqfay8zvz33h.streamlit.app/", tags: ["Python", "XGBoost", "FastAPI", "Streamlit"] },
-  { t: "Sky-Spy", st: "DEPLOYED", d: "Classifies Kepler mission candidates as confirmed exoplanets or false positives. Built for NASA Space Apps Challenge; placed 3rd as team lead.", ml: "RESULT", mv: "3RD PLACE", s: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], link: "https://github.com/hany73-max/Sky-Spy-Exoplanet-Classifier", tags: ["Python", "XGBoost", "FastAPI", "Streamlit"] },
-  { t: "TicketSense", st: "DATA PIPELINE", d: "Self-designed ETL pipeline and relational data system for support-ticket data, with real data-integrity resolution found during EDA.", ml: "DUPLICATE RECORDS RESOLVED", mv: "441", s: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], link: "https://github.com/hany73-max/TicketSense", tags: ["Python", "PostgreSQL", "SQLAlchemy"] },
+  { t: "Kessler-Shield", s: [0.02, 0.03, 0.02, 0.03, 0.04, 0.03, 0.05, 0.04, 0.1, 0.25, 0.6, 0.35, 0.9, 0.5, 1, 0.45, 0.75, 0.3, 0.55, 0.2, 0.1, 0.06, 0.04, 0.03, 0.03, 0.02, 0.03, 0.02, 0.02, 0.03], st: "LIVE", d: "Predicts high-risk satellite collision events from real orbital telemetry, resolving a severe class imbalance with precision-recall-tuned thresholding.", ml: "CLASS IMBALANCE RESOLVED", mv: "1:1300", link: "https://kessler-shield-akmjrrdw9dsqfay8zvz33h.streamlit.app/", tags: ["Python", "XGBoost", "FastAPI", "Streamlit"] },
+  { t: "Sky-Spy", s: [0.05, 0.2, 0.55, 0.3, 0.85, 0.4, 1, 0.6, 0.35, 0.7, 0.25, 0.1, 0.05, 0.03, 0.05, 0.02, 0.04, 0.02, 0.03, 0.02, 0.02, 0.03, 0.02, 0.01, 0.02, 0.02, 0.01, 0.02, 0.01, 0.02], st: "DEPLOYED", d: "Classifies Kepler mission candidates as confirmed exoplanets or false positives. Built for NASA Space Apps Challenge; placed 3rd as team lead.", ml: "RESULT", mv: "3RD PLACE", link: "https://github.com/hany73-max/Sky-Spy-Exoplanet-Classifier", tags: ["Python", "XGBoost", "FastAPI", "Streamlit"] },
+  { t: "TicketSense", s: [0.01, 0.02, 0.01, 0.02, 0.01, 0.02, 0.02, 0.01, 0.02, 0.01, 0.02, 0.01, 0.02, 0.02, 0.01, 0.02, 0.01, 0.02, 0.02, 0.03, 0.08, 0.2, 0.45, 0.3, 0.7, 0.4, 0.95, 0.55, 1, 0.65], st: "DATA PIPELINE", d: "Self-designed ETL pipeline and relational data system for support-ticket data, with real data-integrity resolution found during EDA.", ml: "DUPLICATE RECORDS RESOLVED", mv: "441", link: "https://github.com/hany73-max/TicketSense", tags: ["Python", "PostgreSQL", "SQLAlchemy", "Spacy"] },
 ];
 
 function Projects() {
@@ -389,7 +394,7 @@ function Projects() {
               </div>
               <h3 className="mt-4 text-3xl font-bold text-white uppercase tracking-wide">{p.t}</h3>
               <p className="mt-2 text-lg leading-snug text-slate-300 flex-1">{p.d}</p>
-              <div className="mt-5"><Spark d={p.s} /></div>
+              <div className="mt-5"><Activity d={p.s} /></div>
               <div className="mt-4 flex items-end justify-between">
                 <div>
                   <div className="mono text-[0.769rem] tc tracking-[.25em]">{p.ml}</div>
